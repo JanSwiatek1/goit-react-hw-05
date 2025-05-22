@@ -1,26 +1,31 @@
-import { useSearchParams } from "react-router-dom";
-import { ProductList } from '../components/ProductList';
-import { Nav } from "../Navigation/Navigation";
-import { getProducts } from '../fakeApi';
+import { Link, useLocation } from 'react-router-dom';
+import css from './MovieList.module.css';
 
-export default function Products() {
-  const products = getProducts();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const productName = searchParams.get("name") ?? "";
-
-  const visibleProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(productName.toLowerCase())
-  );
-
-  const updateQueryString = (name) => {
-    const nextParams = name !== "" ? { name } : {};
-    setSearchParams(nextParams);
-  };
+export default function MovieList({ movies }) {
+  const location = useLocation();
 
   return (
-    <main>
-      <Nav value={productName} onChange={updateQueryString} />
-      <ProductList products={visibleProducts} />
-    </main>
+    <ul className={css.list}>
+      {movies.map(movie => (
+        <li key={movie.id} className={css.item}>
+          <Link
+            to={`/movies/${movie.id}`}
+            state={{ from: location }}
+            className={css.link}
+          >
+            {movie.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                width="200"
+              />
+            ) : (
+              <div className={css.noImage}>No image</div>
+            )}
+            <h3>{movie.title}</h3>
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }

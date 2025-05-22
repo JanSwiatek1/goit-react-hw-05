@@ -1,16 +1,81 @@
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from 'react';
+import { useParams, Outlet, Link, useLocation } from 'react-router-dom';
+import { fetchMovieDetails } from '../../services/moviesAPI';
+import Loader from '../../components/Loader/Loader';
+import styles from './MovieDetailsPage.module.css';
 
-export const ProductDetails = () => {
-    const location = useLocation();
-    const backLinkHref = location.state?.from ?? "/products";
+export default function MovieDetailsPage() {
+  const { movieId } = useParams();
+  const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const location = useLocation();
+  const backLinkRef = useRef(location.state?.from || '/movies');
 
-    console.log(location.state);
-  
-  // /products -> products/h-1
-  // { from: { pathname: "/products", search: "" } }
-  
-  // /products?name=hoodie -> products/h-1
-  // { from: { pathname: "/products", search: "?name=hoodie" } }
-  
-  return <Link to={backLinkHref}>Back to products</Link>;
-  };
+  useEffect(() => {
+    const getMovieDetails = async () => {
+      try {
+        setLoading(true);
+        const movieDetails = await fetchMovieDetails(movieId);
+        setMovie(movieDetails);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getMovieDetails();
+  }, [movieId]);
+
+  return (
+    <div className={styles.container}>
+      <Link to={backLinkRef.current} className={styles.backLink}>
+        Go back
+      </Link>
+
+      {loading && <Loader />}
+      {error && <p>Error: {error}</p>}
+
+      {movie && (
+        <>
+          <div className={styles.movieInfo}>
+            {movie.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                width="300"
+              />
+            ) : (
+              <div className={styles.noImage}>No image</div>
+            )}
+            <div>
+              <h2>
+                {movie.title} ({new Date(movie.release_date).getFullYear()})
+              </h2>
+              <p>User Score: {Math.round(movie.vote_average * 10)}%</p>
+              <h3>Overview</h3>
+              <p>{movie.overview}</p>
+              <h3>Genres</h3>
+              <p>{movie.genres.map(genre => genre.name).join(', ')}</p>
+            </div>
+          </div>
+
+          <div className={styles.additionalInfo}>
+            <h3>Additional information</h3>
+            <ul>
+              <li>
+                <Link to="cast">Cast</Link>
+              </li>
+              <li>
+                <Link to="reviews">Reviews</Link>
+              </li>
+            </ul>
+          </div>
+
+          <Outlet />
+        </>
+      )}
+    </div>
+  );
+}
