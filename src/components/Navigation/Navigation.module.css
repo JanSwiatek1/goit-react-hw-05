@@ -3,6 +3,10 @@
     gap: 20px;
     padding: 20px;
     background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-width: 1200px;
 }
 
 .link {
