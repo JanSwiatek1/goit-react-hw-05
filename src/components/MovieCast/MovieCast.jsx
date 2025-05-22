@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchMovieCredits } from '../../services/moviesAPI';
 import Loader from '../Loader/Loader';
-import styles from './MovieCast.module.css';
+import css from './MovieCast.module.css';
 
 export default function MovieCast() {
   const { movieId } = useParams();
@@ -27,13 +27,13 @@ export default function MovieCast() {
   }, [movieId]);
 
   return (
-    <div className={styles.castContainer}>
+    <div className={css.castContainer}>
       {loading && <Loader />}
       {error && <p>Error: {error}</p>}
       {cast.length > 0 ? (
-        <ul className={styles.castList}>
+        <ul className={css.castList}>
           {cast.map(actor => (
-            <li key={actor.id} className={styles.castItem}>
+            <li key={actor.id} className={css.castItem}>
               {actor.profile_path ? (
                 <img
                   src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
@@ -41,7 +41,7 @@ export default function MovieCast() {
                   width="100"
                 />
               ) : (
-                <div className={styles.noImage}>No photo</div>
+                <div className={css.noImage}>No photo</div>
               )}
               <p>{actor.name}</p>
               <p>Character: {actor.character}</p>

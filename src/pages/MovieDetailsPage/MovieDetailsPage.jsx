@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Outlet, Link, useLocation } from 'react-router-dom';
 import { fetchMovieDetails } from '../../services/moviesAPI';
 import Loader from '../../components/Loader/Loader';
-import styles from './MovieDetailsPage.module.css';
+import css from './MovieDetailsPage.module.css';
 
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
@@ -29,8 +29,8 @@ export default function MovieDetailsPage() {
   }, [movieId]);
 
   return (
-    <div className={styles.container}>
-      <Link to={backLinkRef.current} className={styles.backLink}>
+    <div className={css.container}>
+      <Link to={backLinkRef.current} className={css.backLink}>
         Go back
       </Link>
 
@@ -39,7 +39,7 @@ export default function MovieDetailsPage() {
 
       {movie && (
         <>
-          <div className={styles.movieInfo}>
+          <div className={css.movieInfo}>
             {movie.poster_path ? (
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -47,7 +47,7 @@ export default function MovieDetailsPage() {
                 width="300"
               />
             ) : (
-              <div className={styles.noImage}>No image</div>
+              <div className={css.noImage}>No image</div>
             )}
             <div>
               <h2>
@@ -61,7 +61,7 @@ export default function MovieDetailsPage() {
             </div>
           </div>
 
-          <div className={styles.additionalInfo}>
+          <div className={css.additionalInfo}>
             <h3>Additional information</h3>
             <ul>
               <li>

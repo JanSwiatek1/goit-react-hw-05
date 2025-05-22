@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchMovieReviews } from '../../services/moviesAPI';
 import Loader from '../Loader/Loader';
-import styles from './MovieReviews.module.css';
+import css from './MovieReviews.module.css';
 
 
 export default function MovieReviews() {
@@ -29,7 +29,7 @@ export default function MovieReviews() {
   }, [movieId]);
 
   return (
-    <div className={styles.container}>
+    <div className={css.container}>
       {loading && <Loader />}
       {error && <p>Error: {error}</p>}
 
